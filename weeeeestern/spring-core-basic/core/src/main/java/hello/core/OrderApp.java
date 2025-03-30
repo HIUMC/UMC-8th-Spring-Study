@@ -6,15 +6,22 @@ import hello.core.member.MemberServiceImpl;
 import hello.core.order.Order;
 import hello.core.order.OrderService;
 import hello.core.order.OrderServiceImpl;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class OrderApp {
     public static void main(String[] args) {
 //        MemberService memberService = new MemberServiceImpl();
-//        OrderService orderService = new OrderServiceImpl();
+//        OrderService orderService = new OrderServiceImpl(); -> OCP, DIP 위반
 
-        AppConfig appConfig = new AppConfig();
-        MemberService memberService = appConfig.memberService();
-        OrderService orderService = appConfig.orderService();
+//        AppConfig appConfig = new AppConfig();
+//        MemberService memberService = appConfig.memberService();
+//        OrderService orderService = appConfig.orderService(); -> AppConfig, 스프링 도입 전
+
+        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(AppConfig.class);
+        OrderService orderService = applicationContext.getBean("orderService", OrderService.class);
+        MemberService memberService = applicationContext.getBean("memberService", MemberService.class);
 
         Long memberId = 1L;
 
