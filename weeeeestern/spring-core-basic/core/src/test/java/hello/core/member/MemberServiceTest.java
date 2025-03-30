@@ -13,18 +13,9 @@ public class MemberServiceTest {
         Member member = new Member(1L,"memberA",Grade.VIP);
         //when
         memberService.join(member);
-        Member findMember = memberService.join(1L);
+        Member findMember = memberService.findMember(1L);
         //then
         Assertions.assertThat(findMember).isEqualTo(member);
     }
 
-    @Test
-    public void findById() {
-        //given
-        Member member = new Member(1L,"memberA",Grade.VIP);
-
-        //when
-
-        //then
-    }
 }
