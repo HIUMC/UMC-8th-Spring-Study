@@ -5,21 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2d4282f7-3138-4e5f-bef9-edaf9776d1fc" name="변경" comment="">
-      <change afterPath="$PROJECT_DIR$/../스프링 핵심 원리 - 기본편/core/src/main/java/hello/core/MemberApp.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../스프링 핵심 원리 - 기본편/core/src/main/java/hello/core/OrderApp.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../스프링 핵심 원리 - 기본편/core/src/main/java/hello/core/discount/DiscountPolicy.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../스프링 핵심 원리 - 기본편/core/src/main/java/hello/core/discount/FixDiscountPolicy.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../스프링 핵심 원리 - 기본편/core/src/main/java/hello/core/member/Grade.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../스프링 핵심 원리 - 기본편/core/src/main/java/hello/core/member/Member.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../스프링 핵심 원리 - 기본편/core/src/main/java/hello/core/member/MemberRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../스프링 핵심 원리 - 기본편/core/src/main/java/hello/core/member/MemberService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../스프링 핵심 원리 - 기본편/core/src/main/java/hello/core/member/MemberServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../스프링 핵심 원리 - 기본편/core/src/main/java/hello/core/member/MemoryMemberRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../스프링 핵심 원리 - 기본편/core/src/main/java/hello/core/order/Order.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../스프링 핵심 원리 - 기본편/core/src/main/java/hello/core/order/OrderService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../스프링 핵심 원리 - 기본편/core/src/main/java/hello/core/order/OrderServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../스프링 핵심 원리 - 기본편/core/src/test/java/hello/core/member/MemberServiceTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../스프링 핵심 원리 - 기본편/core/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../스프링 핵심 원리 - 기본편/core/build.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../스프링 핵심 원리 - 기본편/core/src/main/java/hello/core/AppConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../스프링 핵심 원리 - 기본편/core/src/main/java/hello/core/discount/RateDiscountPolicy.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../스프링 핵심 원리 - 기본편/core/src/test/java/hello/core/discount/RateDiscountPolicyTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../스프링 핵심 원리 - 기본편/core/src/main/java/hello/core/order/OrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../스프링 핵심 원리 - 기본편/core/src/main/java/hello/core/order/OrderServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +57,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1742886199934</updated>
-      <workItem from="1742886201572" duration="2831000" />
+      <workItem from="1742886201572" duration="3430000" />
     </task>
     <servers />
   </component>
