@@ -1,10 +1,7 @@
 package hello.spring_basic.member;
 
-<<<<<<< HEAD
 import org.springframework.beans.factory.annotation.Autowired;
 
-=======
->>>>>>> 88403b0 (Fix: Merge conflict)
 public class MemberServiceImpl implements MemberService{
 
     private final MemberRepository memberRepository;
