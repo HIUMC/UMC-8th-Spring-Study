@@ -2,9 +2,7 @@ package hello.spring_basic.discount;
 
 import hello.spring_basic.member.Grade;
 import hello.spring_basic.member.Member;
-import org.springframework.stereotype.Component;
 
-@Component
 public class RateDiscountPolicy implements DiscountPolicy{
 
     // 10% 할인
