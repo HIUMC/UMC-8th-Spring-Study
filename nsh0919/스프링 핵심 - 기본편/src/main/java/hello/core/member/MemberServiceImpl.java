@@ -8,6 +8,10 @@ public class MemberServiceImpl implements MemberService {
         this.memberRepository = memberRepository;
     }
 
+    public MemberRepository getMemberRepository() {
+        return memberRepository;
+    }
+
 
     public void join(Member member) {
         memberRepository.save(member);
