@@ -9,6 +9,8 @@ import spring.hellospring.member.MemberRepository;
 import spring.hellospring.member.MemberServiceImpl;
 import spring.hellospring.order.OrderServiceImpl;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class ConfigurationSingletonTest {
 
     @DisplayName("@Configuration을 통한 싱글톤 유지")
