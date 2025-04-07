@@ -14,6 +14,11 @@ public class OrderServiceImpl implements OrderService {
     //private final DiscountPolicy discountPolicy = new RateDiscountPolicy();
     private DiscountPolicy discountPolicy;
 
+    //테스트 용도
+    public MemberRepository getMemberRepository() {
+        return memberRepository;
+    }
+
     //생성자를 통해 뭐가 들어갈지 정함
     public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
         this.memberRepository = memberRepository;
