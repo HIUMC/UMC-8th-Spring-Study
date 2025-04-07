@@ -1,5 +1,4 @@
-package hello.spring_basic.member;
-
+package spring.hellospring.member;
 
 import org.springframework.stereotype.Component;
 
@@ -20,4 +19,6 @@ public class MemoryMemberRepository implements MemberRepository {
     public Member findById(Long memberId) {
         return store.get(memberId);
     }
+
+
 }
