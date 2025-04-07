@@ -1,5 +1,9 @@
 package hello.core.member;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
 public class MemberServiceImpl implements MemberService {
 
     //생성자 주입할 수 있도록
@@ -11,6 +15,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     //생성자를 통해 memberRepository에 뭐가 들어갈지 정함
+    @Autowired
     public MemberServiceImpl(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
