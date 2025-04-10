@@ -173,7 +173,7 @@ basePackageClasses : 지정한 클래스의 패키지를 시작 위치로 지정
 
 - 시작 위치 지정하지 않으면 @ComponentScan 붙은 위치부터 스캔
 - 설정 정보 클래스 위치를 프로젝트 최상단에 두도록 권장하심
-- com.gello - 프로젝트 시작 루트. AppConfig 같은 메인 설정 정보 두기
+- com.hello - 프로젝트 시작 루트. AppConfig 같은 메인 설정 정보 두기
     - @SpringBootApplication 루트에 두는 것이 관례(@ComponentScan 포함됨)
         - 스프링부트 시작 시 자동 생성되는 CoreApplication클래스에 있음
 
