@@ -222,7 +222,7 @@ CGLIB는 @Configuration에 있는 라이브러리이므로
 
 ### 필터
 includeFilters : 컴포넌트 스캔 대상을 추가로 지정한다.
-excludeFilters : 컴포넌트 스캔에서 제외할 대상을 지정한다.
+excludeFiltersㅎ : 컴포넌트 스캔에서 제외할 대상을 지정한다.
 
 
 
