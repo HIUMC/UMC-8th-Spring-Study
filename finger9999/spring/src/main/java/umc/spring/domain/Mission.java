@@ -24,6 +24,7 @@ public class Mission extends BaseEntity {
 
     private LocalDate deadline;
 
+    @Lob
     @Column(nullable = false, columnDefinition = "TEXT")
     private String missionSpec;
 

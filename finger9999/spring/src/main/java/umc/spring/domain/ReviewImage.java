@@ -18,6 +18,7 @@ public class ReviewImage extends BaseEntity {
     @JoinColumn(name = "review_id")
     private Review review;
 
+    @Lob
     @Column(nullable = false, columnDefinition = "TEXT")
     private String imageUrl;
 }

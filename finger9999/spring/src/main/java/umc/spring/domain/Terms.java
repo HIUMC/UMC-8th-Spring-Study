@@ -22,6 +22,7 @@ public class Terms extends BaseEntity {
     @Column(nullable = false, length = 20)
     private String title;
 
+    @Lob
     @Column(nullable = false, columnDefinition = "TEXT")
     private String body;
 
