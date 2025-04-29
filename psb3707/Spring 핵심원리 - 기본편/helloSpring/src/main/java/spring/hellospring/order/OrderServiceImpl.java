@@ -1,7 +1,9 @@
 package spring.hellospring.order;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import spring.hellospring.annotation.MainDiscountPolicy;
 import spring.hellospring.discount.DiscountPolicy;
 import spring.hellospring.discount.FixedDiscountPolicy;
 import spring.hellospring.discount.RateDiscountPolicy;
@@ -10,6 +12,7 @@ import spring.hellospring.member.MemberRepository;
 import spring.hellospring.member.MemoryMemberRepository;
 
 @Component
+//@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
 //    private final MemberRepository memberRepository = new MemoryMemberRepository();
@@ -20,7 +23,7 @@ public class OrderServiceImpl implements OrderService {
     private final DiscountPolicy discountPolicy;
 
     @Autowired
-    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+    public OrderServiceImpl(MemberRepository memberRepository, @MainDiscountPolicy DiscountPolicy discountPolicy) {
         this.memberRepository = memberRepository;
         this.discountPolicy = discountPolicy;
     }
