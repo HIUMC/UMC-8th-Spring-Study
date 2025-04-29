@@ -15,8 +15,8 @@ import org.springframework.context.annotation.FilterType;
 public class AutoAppConfig {
 
     // 빈 이름이 충돌 -> 오류 발생
-    @Bean(name = "memoryMemberRepository")
-    public MemberRepository memberRepository() {
-        return new MemoryMemberRepository();
-    }
+//    @Bean(name = "memoryMemberRepository")
+//    public MemberRepository memberRepository() {
+//        return new MemoryMemberRepository();
+//    }
 }
