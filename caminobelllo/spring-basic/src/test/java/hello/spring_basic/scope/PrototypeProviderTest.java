@@ -2,6 +2,7 @@ package hello.spring_basic.scope;
 
 
 import jakarta.annotation.*;
+import jakarta.inject.Provider;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -26,9 +27,10 @@ public class PrototypeProviderTest {
     static class ClientBean {
 
         @Autowired
-        private ApplicationContext ac;
+        private Provider<PrototypeBean> provider;
+
         public int logic() {
-            PrototypeBean prototypeBean = ac.getBean(PrototypeBean.class);
+            PrototypeBean prototypeBean = provider.get();
             prototypeBean.addCount();
             int count = prototypeBean.getCount();
             return count;
@@ -38,12 +40,14 @@ public class PrototypeProviderTest {
     @Scope("prototype")
     static class PrototypeBean {
         private int count = 0;
+
         public void addCount() {
             count++;
         }
         public int getCount() {
             return count;
         }
+
         @PostConstruct
         public void init() {
             System.out.println("PrototypeBean.init " + this);
