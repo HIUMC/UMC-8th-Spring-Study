@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class CoreApplication {
 	//3주차 정리 완료
+	//4주차 정리 완
 
 	public static void main(String[] args) {
 
