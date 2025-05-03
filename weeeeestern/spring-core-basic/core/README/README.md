@@ -819,3 +819,656 @@ public class MemberServiceImpl implements MemberService {
   - @Bean(name = “ ”)  : 수동 빈 이름 등록이 우선권을 가짐.
   - 수동 빈이 자동 빈을 오버라이딩 한다.
   - 근데 최근에는 그냥 **오류**가 나도록 바뀌었다.
+
+# 6주차 README
+
+# Section 8. 의존관계 자동 주입
+
+스프링은 **빈을 생성 하는 단계**, **의존관계를 주입하는 단계**가 나뉘어져 있다.
+
+1. 스프링 컨테이너 생성 by 설정정보(config)
+2. 스프링 빈 등록
+3. 스프링 빈 의존관계 설정
+
+의존 관계 주입 방법
+
+- 생성자 주입
+- 수정자 주입(setter 주입)
+- 필드 주입
+- 일반 메서드 주입
+
+---
+
+### **<생성자 주입>**
+
+OrderServiceImpl 이 Component 스캔으로, 빈으로 등록이 될 때
+생성자를 호출해야 되고, 생성자에 @Autowired가 있으면
+컨테이너에서 ***매개변수의 타입***을 보고 해당 타입의 빈을 꺼내고, 의존성 주입
+
+```java
+private final MemberRepository memberRepository;
+private final DiscountPolicy discountPolicy;
+
+@Autowired
+public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+		this.memberRepository = memberRepository;
+    this.discountPolicy = discountPolicy; }
+```
+
+- 생성자를 호출한 시점에 **딱 1번**만 호출되는 게 보장된다. (setter 만들지 말자)
+  - **불변** 의존관계
+  - **필수** 의존관계 (`private final` 처럼, null이 아닌 값의 초기화가 필수)
+- 생성자가 **1개만** 있으면 자동으로 @Autowired 가 붙는다.
+
+객체가 만들어 질 때, 생성자가 자동으로 불려지기 때문에 스프링 빈이 만들어질 때, 의존관계 주입이 **같이** 발생한다.
+
+### **<수정자 주입>**
+
+자바에서는 필드의 값을 직접 변경하거나 가져오지 않고,
+getter와 setter 메서드를 이용한다.
+
+```java
+private MemberRepository memberRepository;
+private DiscountPolicy discountPolicy;
+
+**@Autowired**
+public void **set**MemberRepository(MemberRepository memberRepository){
+		this.memberRepository = memberRepository;}
+
+**@Autowired**		
+public void **set**DiscountPolicy(DiscountPolicy discountPolicy){
+		this.discountPolicy = discountPolicy;}		
+```
+
+- 생성자 주입 방식과 다르게, 스프링 빈이 만들어지는 과정이 끝나고 나서, @autowired 의존관계가 주입된다.
+  - 스프링은 크게 빈을 등록하는 과정, 의존관계 주입  과정 으로 나뉘어진다.
+- 여러 번 호출 가능
+  - **가변** 의존관계
+  - **선택** 의존관계 (초기화 값이 없어도, 의존관계 주입 가능)
+    - `Autowired(required = false)` 가 필요
+
+### **<필드 주입>**
+
+```java
+**@Autowired** private MemberRepository memberRepository;
+**@Autowired** private DiscountPolicy discountPolicy;
+```
+
+- 외부(**스프링이 없는 상태** = autowired 작동 안 함)에서 의존 객체 값 **변경이
+  불가능 (**필드가 그대로 null**)** 해서, 테스트 하기 힘들다.
+  ~~(setter가 필요함→ 그럴바에는 수정자 주입을 함)~~
+  - 생성자 주입은, 외부환경에서도 직접 주입을 해줄 수 있는데
+    필드 주입은, 스프링 없이는 사용자가 직접 주입해줄 수가 없다.
+- 애플리케이션 코드와 관련이 없는 **테스트 코드**에선 사용 가능
+- @Configuration → 스프링에서만 쓰니까
+
+### **<일반 메서드 주입>**
+
+```java
+ @Component
+ public class OrderServiceImpl implements OrderService {
+	 private MemberRepository memberRepository;
+	 private DiscountPolicy discountPolicy;
+	 
+	 @Autowired
+	 public void init(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+		 this.memberRepository = memberRepository;
+		 this.discountPolicy = discountPolicy;
+    }
+ }
+```
+
+- 한 번에 여러 필드 주입 가능.
+- OrderServiceImpl이 **스프링 빈**이기 때문에 의존관계 자동 주입이 동작한다.
+  - Member같은 순수 자바 클래스는 @Autowired 적용 안 됨
+
+
+☆☆ 도메인 모델 ex. Member, Order..
+
+- 비즈니스 데이터를 표현하는 데에만 집중한다.
+  - id, password 같은 속성,  getter/setter 같은 단순 메서드만 가짐
+  - 스프링 프레임워크와 **독립적** 설계 → 유지보수, 재사용성 ↑, 테스트 용이
+
+
+☆☆ 스프링 빈 ex. 서비스, 레포리토지..
+
+- 의존성 주입, 트랜잭션 개념 이용 가능, 생명주기 관리 등 이점 有
+- 스프링 컨테이너는 어플리케이션 실행 시 한 번만 생성되고, 설정 파일에 따라 빈들을 관리
+
+---
+
+### <옵션 처리>
+
+@Autowired(required = **true**) 일 때, 자동 주입 대상 빈이 없으면 ?
+→ nullpointerException
+
+※ 테스트 할 때, 매번 새 컨테이너를 정의하기
+
+- 테스트 간의 상태가 공유되지 않음. (영향 X)
+- 테스트 마다 새 설정이 필요한 경우, 새 컨테이너를 생성해야 한다.
+
+1. @Autowired(required = false)
+
+```java
+@Autowired(required = false)
+public void setNoBean1(Member noBean1) {
+    System.out.println("setNoBean1 = " + noBean1);
+}
+```
+
+- Member 는 스프링 빈이 아님
+- @Autowired(required = false)
+  - 의존성이 필수가 아니라는 의미
+  - 의존성 주입할 빈이 없으면 메서드 호출도 안 하고 그냥 건너 뛰어버림
+
+1. @Nullable
+
+```java
+@Autowired
+public void setNoBean2(**@Nullable** Member noBean2) {
+    System.out.println("setNoBean2 = " + noBean2);
+}
+```
+
+- Member는 스프링 빈이 아님 → noBean2 에 null 값이 전달 됨.
+- 출력 : setNoBean2 = null
+
+1. Optional<>
+
+```java
+@Autowired
+public void setNoBean3(Optional<Member> noBean3) {
+    System.out.println("setNoBean3 = " + noBean3);
+}
+```
+
+- Member 는 스프링 빈이 아님 → noBean3 에 Optional.empty가 전달 됨.
+- 출력 : setNoBean3 = Optional.empty
+
+---
+
+### <생성자 주입을 사용하거라>
+
+OrderServiceImpl의 createOrder 만 **테스트** 해보고 싶다.
+
+```java
+@Test
+ void createOrder() {
+ OrderServiceImpl orderService = new OrderServiceImpl();
+    orderService.createOrder(1L, "itemA", 10000);
+ }
+```
+
+- **setter 주입** : NPE
+1. `OrderServiceImpl` 객체를 `new` 키워드로 생성.
+  - 테스트 환경에서는 스프링을 사용하지 않았기 때문에, @Autowired 작동 X
+  - 필요한 의존성 (memberRepository ,discountPolicy) 들이  **null**로 초기화됨
+2. `createOrder` 메서드를 실행.
+
+   `createOrder` 메서드 내부에서 `discountPolicy`의 메소드 호출 시도
+
+   (setter 주입은 객체 생성 이후에서야 의존성 주입됨)
+
+   → null이니까 NPE 발생
+
+- **생성자 주입** :  컴파일 오류. 그래서 의존 관계가 누락됐구나 바로 알 수 있다.
+  - 생성자 호출 시점 (객체 생성 시점) 에 모든 의존성이 설정되도록 강제하기에, 의존성을 누락하면 컴파일 오류.
+  - 필드에 `final` 키워드 사용 가능
+    → 생성자 필수 필드에 값 누락 방지 (컴파일 오류 띄워서)
+  - 필수 값이 아닌 경우, setter 주입을 Optional<>로 부여하면 된다.
+
+---
+
+### 인텔리제이에서 롬복 사용하기
+
+- gradle 파일에 롬복 관련 정보 추가하기 및 gradle Refresh
+- 플러그인 - lombok 다운로드 확인
+- annotation process (compiler 밑) 의, **enable annotation processing** 켜주기
+
+→ 멤버 변수 getter, setter 자동으로 만들어준다.
+
+→ 생성자도 자동으로 만들어준다. ex. @NoArgsConstructor
+
+@RequiredArgsConstructor → `final` 이 붙은 **필수 필드**에 대하여, 아래와 같은 생성자를 만들어준다.
+
+```java
+public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+        this.memberRepository = memberRepository;
+        this.discountPolicy = discountPolicy;
+    }
+```
+
+```java
+@Component
+**@RequiredArgsConstructor**
+public class OrderServiceImpl implements OrderService {
+
+    private final MemberRepository memberRepository;
+    private final DiscountPolicy discountPolicy;
+```
+
+- 생성자가 딱 1개만 있으면 @Autowired 를 생략할 수 있다.
+
+---
+
+※ 생성자 의존관계 주입 ⇒
+생성자의 매개변수 **타입**으로 조회하는데, 조회 빈이 2개 이상이라면?
+
+- `ac.getBean(DiscountPolicy.class)`
+  - 하위 타입인 `FixDiscountPolicy` 와 `RateDiscountPolicy` 가 둘 다 스프링 빈이라면?
+
+      ```java
+      @Component
+      public class FixDiscountPolicy implements DiscountPolicy { ...}
+      ```
+
+      ```java
+      @Component
+      public class RateDiscountPolicy implements DiscountPolicy { ...}
+      ```
+
+  - NoUniqueBeanDefinitionException
+    - 생성자 는 타입으로만 주입하므로 오류남
+
+1. @Autowired 필드 명 매칭
+
+Autowired 는 타입 매칭을 시도하고, 여러 빈이 있다면
+**필드 이름 or** **파라미터 이름**으로 빈 이름 매칭을 다시 시도한다.
+
+```java
+    @Autowired
+    private DiscountPolicy **rateDiscountPolicy**;
+
+    @Autowired
+    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy **rateDiscountPolicy**) {
+        this.memberRepository = memberRepository;
+        this.discountPolicy = **rateDiscountPolicy**;
+    }
+```
+
+1. @Qualifier 사용
+
+```java
+@Component
+@Qualifier("mainDiscountPolicy")
+public class RateDiscountPolicy implements DiscountPolicy {...}
+```
+
+```java
+@Component
+@Qualifier("fixDiscountPolicy")
+public class FixDiscountPolicy implements DiscountPolicy {...}
+```
+
+- 컴포넌트 스캔 or 빈 등록 할 때, @Qualifier 를 붙여주고
+  생성자 주입 시 파라미터에 @Qualifier 를 붙여주고 등록한 이름도 적어준다.
+
+```java
+public OrderServiceImpl(MemberRepository memberRepository, 
+												**@Qualifier("mainDiscountPolicy")** DiscountPolicy fixDiscountPolicy) {
+        this.memberRepository = memberRepository;
+        this.discountPolicy = fixDiscountPolicy;
+    }
+```
+
+1. **@Primary** 사용 : 우선순위로 의존관계 주입됨
+
+```java
+@Component
+**@Primary**
+public class RateDiscountPolicy implements DiscountPolicy {...}
+```
+
+---
+
+### 어노테이션 직접 만들기
+
+@Qualifier("mainDiscountPolicy") → 문자이므로 컴파일 타임에 타입 체크가 되지 않는다.
+
+```java
+@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+@Documented
+@Qualifier("mainDiscountPolicy")
+public @interface MainDiscountPolicy {
+
+}
+```
+
+이렇게 만들면, @MainDiscountPolicy 를 쓸 수 있게 된다.
+
+@Qualify 의 어노테이션들을 같다 붙였기에, @Qualify 와 동일한 효과 有
+
+ctrl + B : 해당 어노테이션을 사용하는 코드들 추적
+
+---
+
+### 조회한 빈이 모두 필요할 때, List, Map
+
+모든 클라이언트에게 일괄 적용이 아니라, 개인 클라이언트가 각각 rate, fix 방식을 선택해서 사용하는 것이라면? (동적으로 빈을 선택해야 할 때)
+
+```java
+ static class DiscountService{
+        private final **Map<String, DiscountPolicy>** policyMap;
+        private final **List<DiscountPolicy>** policies;
+
+        DiscountService(Map<String, DiscountPolicy> policyMap, List<DiscountPolicy> policies) {
+            this.policyMap = policyMap;
+            this.policies = policies;
+            System.out.println("policyMap: " + policyMap);
+            System.out.println("policies: " + policies);
+        }
+    }
+```
+
+- Map으로 **모든** discountPolicy 를 주입 받는다.
+- discountCode 이 이름으로 된 스프링 빈을찾아 실행한다.
+
+```java
+ @Test
+    void findAllBean(){
+        ApplicationContext ac = new AnnotationConfigApplicationContext(AutoAppConfig.class, DiscountService.class);
+        DiscountService discountService = ac.getBean(DiscountService.class);
+        Member member = new Member(1L, "userA", Grade.VIP);
+        int discountPrice = discountService.discount(member, 10000, "fixDiscountPolicy");
+        Assertions.assertThat(discountPrice).isEqualTo(1000);
+    }
+```
+
+```java
+public int discount(Member member, int price, String discountCode) {
+    DiscountPolicy discountPolicy = policyMap.get(discountCode);
+    return discountPolicy.discount(member, price);
+}
+```
+
+---
+
+### 자동과 수동 선택 기준
+
+개발자 입장에서 스프링 빈을 하나 등록할 때 **@Component** 만 넣어주면 끝나는 일을, @Configuration 설정 정보에 가서 @Bean 을 하나하나 적고, 객체를 생성하고 주입할 대상을 일일이 적어주는 과정은 상당히 번거롭다.
+
+또 관리할 빈이 많아서 설정 정보가 커지면 설정 정보를 관리하는 것 자체가 부담이 된다. 그리고 결정적으로 자동 빈 등록을 사용해도 OCP, DIP를 지킬 수 있다.
+
+업무 로직 빈보다, **기술 지원 빈**(데이터베이스에 연결하기, 공통 로그 처리) 에서
+수동 빈 등록을 사용하여 명확하게 드러내자.
+
+애플리케이션에 광범위하게 영향을 미치는 기술 지원 객체는 수동 빈으로 등록해서
+딱! **설정 정보**에 바로 나타나게 하는 것이 유지보수 하기 좋다.
+
+```java
+@Configuration
+public class AppConfig {
+
+    @Bean
+    public DataSource dataSource() {
+        DataSource dataSource = new HikariDataSource();
+        dataSource.setUrl("jdbc:mysql://localhost:3306/mydb");
+        dataSource.setUsername("user");
+        dataSource.setPassword("password");
+        return dataSource;
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager() {
+        return new DataSourceTransactionManager(dataSource());
+    }
+}
+```
+
+비즈니스 로직 중에서 **다형성을 적극 활용**할 때
+의존관계 자동 주입 - 조회한 빈이 모두 필요할 때, List, Map을 사용할 때..
+
+- `DiscountService`가 의존관계 자동 주입으로 `Map<String, DiscountPolicy>`에 주입을 받는 상황 → `DiscountPolicy` 에 어떤 빈들이 정의되어있는지 **한 눈에** 보려면, 수동 빈 등록이 나을 수도
+- 같은 패키지에 묶어두기
+
+# Section 9. 빈 생명주기 콜백
+
+어떤 객체는 내부에서 필요한 의존 객체를 먼저 주입 받고, **초기화** 작업을 진행해야 한다.
+
+<초기화 작업>
+
+- 데이터베이스 커넥션 풀 (DB와 어플리케이션 여러개 미리 연결해두기)
+- REST API 클라이언트 연결
+- 네트워크 소켓
+- 배치 스케줄 시작
+- 로그 남기기
+
+- 생성자 의존관계 주입
+  - 객체 생성과 동시에, 생성자 파라미터를 보고 의존관계 주입
+- 나머지
+  - 객체 생성이 끝나고, 의존관계 주입
+  - 스프링은 의존관계 주입이 완료되면 빈에게 **콜백 메서드**를 통해 초기화 시점을 알려줌
+  - 스프링은 스프링 컨테이너가 종료되기 직전에 **소멸 콜백**을 준다.
+
+- 스프링 빈의 이벤트 라이프사이클 (싱글톤)
+  - 스프링 컨테이너 생성 → 스프링 빈 생성 → 의존관계 주입 → **초기화 콜백** → 사용 →
+    **소멸 전 콜백** → 스프링 종료
+
+  but 의존관계 주입 이전, 생성자 안에서 초기화를 하려고 하면 값 전달이 안 된다.
+
+  ![image11.png](image11.png)
+
+
+---
+
+### 스프링 전용 인터페이스 InitializingBean, DisposhableBean
+
+※ 초기화 및 소멸의 메서드 이름 변경 불가,
+
+- `InitializingBean`
+  - 스프링이 빈을 생성한 후, **의존성 주입이 모두 끝났을 때** 자동 호출되는 콜백 메서드를 정의한 인터페이스
+  - `afterPropertiesSet()` 메서드 : **초기화 시점**에 자동 실행되는 메서드
+
+⇒ 생성자 호출 → 의존관계 주입 → 초기화 메서드 → 사용 → 소멸 시점에 close
+
+setter 설정이 끝난 다음에 초기화 작업
+
+- `DisposableBean`
+  - `destroy()` 메서드 :  빈이 종료될 때 소멸
+
+![image12.png](image12.png)
+
+---
+
+### 빈 등록 초기화, 소멸 메서드
+
+설정 정보의 @빈 어노테이션 옆에 (initMethod, destroyMethod) 등록
+
+- 스프링 빈이 스프링 코드에 의존하지 않는다.
+- 코드가 아닌 설정정보를 사용하기 때문에, 코드를 고칠 수 없는 외부 라이브러리에도 적용가능하다.
+
+```java
+@Configuration
+    static class LifeCycleConfig {
+        **@Bean(initMethod = "init", destroyMethod = "close")**
+        public NetworkClient networkClient() {
+            NetworkClient networkClient = new NetworkClient(); // 생성자 호출
+            networkClient.srtUrl("http://hello-spring.dev");
+            return networkClient;
+        } // 수동 빈 등록 : 직접 객체를 생성하고, 설정하고, return 결과를 스프링에 등록함
+    }
+}
+```
+
+---
+
+### 어노테이션 @PostConstruct, @PreDestroy
+
+- 생성자에 초기화 로직을 넣으면, 의존성 주입 이전이므로 null이다.
+  - 따라서 초기화는 의존관계 주입 이후에 해주어야 함
+- 외부라이브러리에는 적용 불가능,,
+
+```java
+		**@PostConstruct**
+    public void init() throws Exception {
+        connect();
+        call("초기화 연결 메세지");
+    }
+
+    **@PreDestroy**
+    public void close() {
+        disconnect();
+    }
+```
+
+# Section 10. 빈 스코프
+
+스코프 : 빈이 존재할 수 있는 범위
+
+- 싱글톤 : 기본 스코프. 스프링 컨테이너의 시작부터 종료까지 유지되는 가장 넓은 범위의 스코프
+  - 항상 **같은 인스턴스**를 스프링 빈으로 반환한다.
+- 프로토타입 : 스프링 컨테이너는 프로토타입 빈의 생성과 의존관계 주입까지만 관여한다.
+  - 조회할 때마다 항상 **새로운 인스턴스**를 만들어서 반환한다.
+
+- request : 웹 요청이 들어오고 나갈 때까지 유지되는 스코프
+  - 사용자마다 각각 스프링 빈이 생성된다.
+- session : 웹 세션이 생성되고 종료될 때까지 유지되는 스코프
+  - 세션 : 웹 브라우저마다 부여되는 고유 공간
+- application : 웹의 서블릿 컨텍스와 같은 범위로 유지되는 스코프
+
+---
+
+### 프로토타입 스코프
+
+- 클라이언트의 요청이 들어올 때 마다,
+  새 프로포타입 빈을 생성하고 의존관계를 주입, 그리고 초기화 메세지까지 호출 후 반환
+- 따라서 종료 메서드는 호출되지 않는다.
+
++) `isNotEqualTo()` : 값이 다른지 비교, `isNotSameAs()` : 객체 참조가 다른지 비교
+
+싱글톤 빈에서 프로토타입 빈 사용 예시
+
+- ClientBean : 싱글톤 빈, PrototypeBean : 프로토타입 빈
+- `ClientBean`이 의존성으로 `PrototypeBean`을 가지고 있음
+- 스프링 컨테이너 생성 → 싱글톤 빈 생성 및 필요한 의존성 주입
+  - PrototypeBean은 의존관계가 주입될 때 생성됨
+  - 싱글톤은 객체가 한 번 생성, 따라서 의존관계도 한 번만 주입됨
+- 이후, `ClientBean` 이 계속 사용되면, 싱글톤이므로 계속 사용되고,
+  `ClientBean` 안에 있던 기존의 `PrototypeBean` 가 계속 같이 재사용됨
+
+⇒ 직접 매번 prototypeBean 을 새로 꺼내 쓰도록 해야 한다.
+
+```java
+ public int logic(){
+     **PrototypeBean prototypeBean** = applicationContext.getBean(PrototypeBean.class);
+     prototypeBean.accCount();
+     int count = prototypeBean.getCount();
+     return count;
+} // 로직 호출마다 prototypeBean 꺼내오기
+```
+
+스프링 컨테이너 전체를 직접 주입받는 위 방법은 스프링에 너무 의존적이다..
+
+---
+
+### Provider
+
+Dipendency Lookup : 빈을 생성하지 않고, 필요할 때마다 가져옴
+
+- ClientBean 이 생성될 때 PrototypeBean이 아니라, Provider가 주입됨!
+- <T> 타입 빈을 나중에 필요할 **때마다** 새로 달라고 요청
+
+- ObjectProvider :  스프링에 의존적
+
+```java
+ @Scope("singleton")
+    static class ClientBean{
+
+        @Autowired
+        **private ObjectProvider<PrototypeBean> prototypeBeanProvider;**
+
+        public int logic(){
+            PrototypeBean prototypeBean =  prototypeBeanProvider.**getObject()**;
+            prototypeBean.accCount();
+            int count = prototypeBean.getCount();
+            return count;
+        }
+    }
+```
+
+- jakarta의 표준 Provider 라이브러리
+  - 단위 테스트, mock 코드 만들기는 편하다. 스프링이 아님
+  - 그래서 외부 라이브러리 필요
+
+---
+
+### request 스코프
+
+HTTP 요청이 동시에 여러개가 오면 어떤 요청이 남긴 로그인지 구분하기 어렵다.
+
+수명주기가 요청 주기인 request 스코프, MyLogger를 이용! 요청마다 객체를 따로 만들면 된다!
+
+- @Scope(”request”) : 요청 당 하나씩 생성되고, HTTP 요청이 끝나는 시점에 소멸된다.
+
+```java
+@Component
+**@Scope(value = "request")**
+public class MyLogger {
+    private String uuid;
+    private String requestURL;
+    ...}
+```
+
+```java
+@Controller
+@RequiredArgsConstructor
+public class LogDemoController {
+    private final LogDemoService logDemoService;
+    private final MyLogger myLogger;
+    ...}
+```
+
+⇒ (로그가 잘 작동되는지 확인하는) 컨트롤러가 생성될 때
+myLogger 의존 관계를 주입받으려고 했지만, request 스코프 빈은 아직 생성되지 않았다.
+request 스코프 빈은 실제 고객의 요청이 와야 생성할 수 있다!
+
+지연 필요
+
++) 원래는 스프링 웹의 스프링 인터셉터에 requestURL 저장
+
+---
+
+### 스코프와 Provider
+
+```java
+@Controller
+@RequiredArgsConstructor
+public class LogDemoController {
+    private final LogDemoService logDemoService;
+    private final **ObjectProvider<MyLogger>** myLoggerProvider;
+    ...}
+```
+
+```java
+@Service
+@RequiredArgsConstructor
+public class LogDemoService {
+
+    private final **ObjectProvider<MyLogger>** myLoggerProvider;
+    ...}
+```
+
+- 처음 컨트롤러, 서비스 빈이 생성될 때, Provider 의존관계가 주입된다.
+- 나중에 `getObject()` 메소드가 호출될 때, request 스코프 객체가 만들어진다.
+  - 그 때 **@PostConstruct** 의 `init` 메소드로 uuid가 초기화가 된다. (해당 request와 연결)
+
+---
+
+### 스코프와 프록시
+
+```java
+@Component
+@Scope(value = "request", **proxyMode = ScopedProxyMode.TARGET_CLASS)**
+public class MyLogger {
+    private String uuid;
+    private String requestURL;
+    ...}
+```
+
+- 의존관계 주입 때, MyLogger의 가짜(프록시) 객체를 주입시켜준다.
+
+![image13.png](image13.png)
+
+- 이 프록시는 나중에 myLogger의 멤버가 호출되면, 그 때에 진짜 myLogger 로직을 가져옴.
