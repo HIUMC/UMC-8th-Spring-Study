@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.spring.domain.Member;
 import umc.spring.repository.*;
+import umc.spring.repository.MemberMissionRepository.MemberMissionRepository;
+import umc.spring.repository.ReviewRepository.ReviewRepository;
 
 @Service
 @RequiredArgsConstructor
