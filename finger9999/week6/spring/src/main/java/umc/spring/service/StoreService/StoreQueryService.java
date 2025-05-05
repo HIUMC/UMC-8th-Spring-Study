@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface StoreQueryService {
 
     Optional<Store> findStore(Long id);
-    List<Object> findStoresByNameAndScore(String name, Float score);
+    List<Store> findStoresByNameAndScore(String name, Float score);
 }
