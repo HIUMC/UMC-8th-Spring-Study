@@ -31,7 +31,7 @@ public abstract class Item {
 
 
     // 데이터를 가지고 있는 쪽에서 데이터의 수량 관리 로직     // 재고 수량 바꾸기
-    public void addQuantity(int quantity) {
+    public void addStock(int quantity) {
         this.stockQuantity += quantity;
     }
 
