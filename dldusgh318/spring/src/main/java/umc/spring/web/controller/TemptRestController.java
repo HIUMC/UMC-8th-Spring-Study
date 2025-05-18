@@ -27,4 +27,9 @@ public class TemptRestController {
         tempQueryService.CheckFlag(flag);
         return ApiResponse.onSuccess(TempConverter.toTempExceptionDTO(flag));
     }
+
+    @GetMapping("/test-error")
+    public void testError() {
+        throw new RuntimeException("테스트용 예외 발생");
+    }
 }

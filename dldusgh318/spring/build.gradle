@@ -48,6 +48,9 @@ dependencies {
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	//testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	//slack
+	implementation 'com.slack.api:slack-api-client:1.28.0'
 }
 
 tasks.named('test') {
