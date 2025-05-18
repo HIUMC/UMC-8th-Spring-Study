@@ -2,6 +2,9 @@ package umc.spring.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.transaction.annotation.Transactional;
 import umc.spring.domain.common.BaseEntity;
 import umc.spring.domain.enums.Gender;
@@ -17,6 +20,8 @@ import java.util.List;
 
 @Entity
 @Getter
+@DynamicUpdate
+@DynamicInsert
 //builder패턴을 위한 어노테이션 3개
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -49,9 +54,10 @@ public class Member extends BaseEntity {
 
     private LocalDate inactiveDate;
 
-    @Column(nullable = false,length = 50)
+    //@Column(nullable = false,length = 50)
     private String email;
 
+    @ColumnDefault("0")
     private Integer point;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -70,4 +76,6 @@ public class Member extends BaseEntity {
         this.memberStatus = MemberStatus.INACTIVE;
         this.inactiveDate = LocalDate.now(); // 탈퇴 날짜 기록
     }
+
+
 }

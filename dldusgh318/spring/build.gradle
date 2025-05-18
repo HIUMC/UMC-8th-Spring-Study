@@ -43,14 +43,18 @@ dependencies {
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
 
-	implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
-	implementation 'org.springdoc:springdoc-openapi-data-rest:1.6.9'
+	//implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
+	//mplementation 'org.springdoc:springdoc-openapi-data-rest:1.6.9'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	//testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 	//slack
 	implementation 'com.slack.api:slack-api-client:1.28.0'
+
+	//swagger
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
+
 }
 
 tasks.named('test') {
