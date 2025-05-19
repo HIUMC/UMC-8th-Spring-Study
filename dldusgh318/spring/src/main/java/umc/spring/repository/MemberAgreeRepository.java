@@ -12,5 +12,5 @@ public interface MemberAgreeRepository extends JpaRepository<MemberAgree, Long> 
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("DELETE FROM MemberAgree ma WHERE ma.member.id = :memberId")
-    void deleteAllByMemberId(@Param("memberId") Long memberId);
+    void deleteAllByMemberId(@Param("reviewId") Long memberId);
 }

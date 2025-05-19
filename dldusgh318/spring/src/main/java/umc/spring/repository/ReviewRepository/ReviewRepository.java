@@ -12,5 +12,5 @@ public interface ReviewRepository extends JpaRepository<Review, Integer>, Review
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("DELETE FROM MemberAgree ma WHERE ma.member.id = :memberId")
-    void deleteAllByMemberId(@Param("memberId") Long memberId);
+    void deleteAllByMemberId(@Param("reviewId") Long memberId);
 }
