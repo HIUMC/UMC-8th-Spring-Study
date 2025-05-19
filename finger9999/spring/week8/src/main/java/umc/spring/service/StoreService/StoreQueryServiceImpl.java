@@ -4,6 +4,7 @@ package umc.spring.service.StoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import umc.spring.domain.Region;
 import umc.spring.domain.Store;
 import umc.spring.repository.StoreRepository.StoreRepository;
 
@@ -29,5 +30,10 @@ public class StoreQueryServiceImpl implements StoreQueryService {
         filteredStores.forEach(store -> System.out.println("Store: " + store));
 
         return filteredStores;
+    }
+
+    @Override
+    public boolean existsById(Long id){
+        return storeRepository.existsById(id);
     }
 }
