@@ -1,4 +1,7 @@
 spring:
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
   datasource:
     url: jdbc:h2:tcp://localhost/~/jpashop
     username: sa
@@ -7,9 +10,11 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+
     properties:
       hibernate:
       # show_sql: true
         format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
 logging.level:
   org.hibernate.SQL: debug
