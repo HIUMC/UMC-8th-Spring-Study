@@ -2,10 +2,7 @@ package umc.spring.web.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import umc.spring.apiPayload.ApiResponse;
 import umc.spring.domain.Review;
 import umc.spring.service.ReviewService;
@@ -19,6 +16,7 @@ import umc.spring.web.dto.ReviewResponseDTO;
 public class ReviewController {
     private final ReviewService reviewService;
 
+    @PostMapping("/{storeId}/{memberId}")
     public ApiResponse<ReviewResponseDTO.ReviewResultDTO> createReview(
             @PathVariable Long storeId,
             @Valid @RequestBody ReviewRequestDTO.createReviewDTO dto,

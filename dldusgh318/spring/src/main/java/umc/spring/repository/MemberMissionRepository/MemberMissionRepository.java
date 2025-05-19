@@ -13,4 +13,6 @@ public interface MemberMissionRepository extends JpaRepository<MemberMission, Lo
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("DELETE FROM MemberAgree ma WHERE ma.member.id = :memberId")
     void deleteAllByMemberId(@Param("reviewId") Long memberId);
+
+    boolean existsByMemberIdAndMissionId(Long memberId, Long missionId);
 }
