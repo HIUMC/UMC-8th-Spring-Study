@@ -1,4 +1,4 @@
-package study.spring.jpastudy.domain;
+package jpabook.jpashop.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -8,15 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
+@Getter @Setter
 public class Member {
-
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
     @Column(name = "member_id")
     private Long id;
-
     private String name;
 
     @Embedded
@@ -24,6 +20,4 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
-
-
 }
