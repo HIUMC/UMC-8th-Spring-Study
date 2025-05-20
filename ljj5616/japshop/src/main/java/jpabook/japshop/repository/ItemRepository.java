@@ -17,7 +17,7 @@ public class ItemRepository {
         if (item.getId() == null) {
             em.persist(item);
         } else {
-            em.merge(item); //업데이트 같은거
+            em.merge(item); //준영속 -> 영속
         }
     }
 
