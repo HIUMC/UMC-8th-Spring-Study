@@ -41,10 +41,6 @@ public class MissionService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
-        if (memberMissionRepository.existsByMemberIdAndMissionId(member.getId(), mission.getId())) {
-            throw new GeneralException(ErrorStatus.ALREADY_CHALLENGED_MISSION);
-        }
-
         MemberMission memberMission = MemberMission.builder()
                 .member(member)
                 .mission(mission)

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import umc.spring.apiPayload.ApiResponse;
 import umc.spring.service.MissionService;
 import umc.spring.validation.annotation.ExistStore;
-import umc.spring.validation.annotation.IsChallengedMission;
+import umc.spring.validation.annotation.IsNotChallengedMission;
 import umc.spring.web.dto.MissionRequestDTO;
 
 @RestController
@@ -24,10 +24,11 @@ public class MissionController {
         return ApiResponse.onSuccess("미션 추가 성공");
     }
 
+    @IsNotChallengedMission
     @PostMapping("/{memberId}/{missionId}")
     public ApiResponse<?> challengeMission(
             @PathVariable Long memberId,
-            @PathVariable @IsChallengedMission Long missionId) {
+            @PathVariable Long missionId) {
         missionService.challengeMission(missionId, memberId);
         return ApiResponse.onSuccess("미션 도전 성공");
     }

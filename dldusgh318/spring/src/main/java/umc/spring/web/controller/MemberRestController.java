@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import umc.spring.apiPayload.ApiResponse;
 import umc.spring.domain.Member;
 import umc.spring.service.MemberService.MemberCommandService;
-import umc.spring.validation.annotation.IsChallengedMission;
 import umc.spring.web.converter.MemberConverter;
 import umc.spring.web.dto.MemberRequestDTO;
 import umc.spring.web.dto.MemberResponseDTO;

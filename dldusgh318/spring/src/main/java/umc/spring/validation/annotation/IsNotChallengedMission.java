@@ -11,7 +11,8 @@ import java.lang.annotation.Target;
 
 @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface IsChallengedMission {
+@Constraint(validatedBy = NotChallengedMissionValidator.class)
+public @interface IsNotChallengedMission {
     String message() default "이미 도전한 미션입니다.";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
