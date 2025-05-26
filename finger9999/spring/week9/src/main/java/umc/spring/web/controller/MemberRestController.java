@@ -53,8 +53,7 @@ public class MemberRestController {
     public ApiResponse<MemberResponseDTO.MyReviewPreViewListDTO> getReviewList (@PathVariable(name = "memberId") @Valid Long memberId,
                                                                                 @RequestParam(name = "page") @Valid @ValidPage Integer page){
 
-        int springPage = page -1;
-        Page<Review> myReviewList = memberQueryService.getReviewList(memberId, springPage);
+        Page<Review> myReviewList = memberQueryService.getReviewList(memberId, page - 1);
         return ApiResponse.onSuccess(MemberConverter.reviewPreViewListDTO(myReviewList));
     }
 }
