@@ -87,3 +87,7 @@ clean {
 //	querydsl.extendsFrom compileClasspath
 //}
 
+tasks.withType(JavaCompile) {
+	options.compilerArgs << "-parameters"
+}
+

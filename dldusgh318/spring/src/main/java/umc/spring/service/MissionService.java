@@ -2,7 +2,9 @@ package umc.spring.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import umc.spring.apiPayload.code.status.ErrorStatus;
 import umc.spring.apiPayload.exception.GeneralException;
@@ -71,5 +73,21 @@ public class MissionService {
 
         Page<Mission> missionPage = page.map(MemberMission::getMission);
         return MissionConverter.toMissionListDTO(missionPage);
+    }
+
+    public MissionResponseDTO.MissionListDTO getStoreMissionsSlice(Long storeId, int pageZero) {
+        Slice<Mission> slice = missionRepository.findSliceByStoreId(
+                storeId,
+                PageRequest.of(pageZero, 10)
+        );
+
+        Page<Mission> emulatedPage = new PageImpl<>(
+                slice.getContent(),
+                slice.getPageable(),
+                slice.hasNext() ? (long) ((pageZero + 2) * slice.getSize()) : (long) ((pageZero + 1) * slice.getSize())
+        );
+
+        return MissionConverter.toMissionListDTO(emulatedPage);
+
     }
 }
