@@ -1,6 +1,8 @@
 package umc.spring.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import umc.spring.apiPayload.code.status.ErrorStatus;
 import umc.spring.apiPayload.exception.GeneralException;
@@ -15,6 +17,7 @@ import umc.spring.repository.MissionRepository.MissionRepository;
 import umc.spring.repository.StoreRepository.StoreRepository;
 import umc.spring.web.converter.MissionConverter;
 import umc.spring.web.dto.MissionRequestDTO;
+import umc.spring.web.dto.MissionResponseDTO;
 
 import static umc.spring.domain.QMember.member;
 
@@ -48,5 +51,25 @@ public class MissionService {
                 .build();
 
         memberMissionRepository.save(memberMission);
+    }
+
+    public MissionResponseDTO.MissionListDTO getStoreMissions(Long storeId, int pageZero) {
+
+        Page<Mission> page = missionRepository.findAllByStoreId(
+                storeId,
+                PageRequest.of(pageZero, 10)
+        );
+        return MissionConverter.toMissionListDTO(page);
+    }
+
+    public MissionResponseDTO.MissionListDTO getMyChallengingMissions(Long memberId, int pageZero) {
+
+        Page<MemberMission> page = memberMissionRepository.findAllByMemberIdAndStatus(
+                memberId, MissionStatus.CHALLENGING,
+                PageRequest.of(pageZero, 10)
+        );
+
+        Page<Mission> missionPage = page.map(MemberMission::getMission);
+        return MissionConverter.toMissionListDTO(missionPage);
     }
 }

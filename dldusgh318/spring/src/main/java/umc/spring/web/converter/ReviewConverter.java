@@ -1,5 +1,6 @@
 package umc.spring.web.converter;
 
+import org.springframework.data.domain.Page;
 import umc.spring.domain.Member;
 import umc.spring.domain.Review;
 import umc.spring.domain.ReviewImage;
@@ -10,6 +11,7 @@ import umc.spring.web.dto.StoreResponseDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ReviewConverter {
 
@@ -45,5 +47,32 @@ public class ReviewConverter {
     }
     public static StoreResponseDTO.ReviewPreviewListDTO reviewPreViewListDTO(List<Review> reviewList){
         return null;
+    }
+
+    public static ReviewResponseDTO.ReviewDTO toReviewDTO(Review review){
+        return ReviewResponseDTO.ReviewDTO.builder()
+                .reviewId(review.getId())
+                .rating(review.getRating())
+                .title(review.getTitle())
+                .images(
+                        review.getReviewImageList().stream()
+                                .map(img->img.getImageUrl())
+                                .collect(Collectors.toList())
+                )
+                .build();
+    }
+
+    public static ReviewResponseDTO.ReviewListDTO toReviewListDTO(Page<Review> reviewList){
+        List<ReviewResponseDTO.ReviewDTO> reviewDTOS= reviewList.stream()
+                .map(ReviewConverter::toReviewDTO).collect(Collectors.toList());
+
+        return ReviewResponseDTO.ReviewListDTO.builder()
+                .isLast(reviewList.isLast())
+                .isFirst(reviewList.isFirst())
+                .totalPage(reviewList.getTotalPages())
+                .totalElements(reviewList.getTotalElements())
+                .listSize(reviewDTOS.size())
+                .reviews(reviewDTOS)
+                .build();
     }
 }
