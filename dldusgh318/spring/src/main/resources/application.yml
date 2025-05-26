@@ -17,3 +17,10 @@ spring:
         hbm2ddl:
           auto: update
         default_batch_fetch_size: 1000
+  profiles:
+    active: local
+
+
+slack:
+  webhook:
+    url: <https://hooks.slack.com/services/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>
