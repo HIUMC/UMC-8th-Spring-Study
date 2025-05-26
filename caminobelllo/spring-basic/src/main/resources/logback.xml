@@ -1,0 +1,15 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp-
+                %msg%n</pattern>
+        </encoder>
+    </appender>
+    <!-- 스프링 부트 실행 시에는
+        파일 제거 or
+        root level="INFO"로 변경할 것
+    -->
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
