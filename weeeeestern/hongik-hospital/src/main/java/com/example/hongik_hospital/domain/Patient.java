@@ -1,6 +1,7 @@
 package com.example.hongik_hospital.domain;
 
 import com.example.hongik_hospital.Gender;
+import com.example.hongik_hospital.PatientStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,6 +26,9 @@ public class Patient {
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
+    @Enumerated(EnumType.STRING)
+    private PatientStatus patientStatus;
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
     private List<Appointment> appointments = new ArrayList<>();

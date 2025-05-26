@@ -3,10 +3,11 @@
 1. erd 설계
 
 ![img_1.png](img_1.png)
++ Patient 엔티티에 patientStatus enum 필드 추가
 
 2. 엔티티 생성 후, db 연결
 
-![img_2.png](img_2.png)
+![img_3.png](img_3.png)
 ![img.png](img.png)
 
 3. api 설계
