@@ -21,7 +21,7 @@ public class StoreCommandServiceImpl implements StoreCommandService {
 
     @Override
     @Transactional
-    public Store addStore(StoreRequestDTO.AddDto request) {
+    public Store addStore(StoreRequestDTO.AddStoreDto request) {
 
         Region region = regionRepository.findById(request.getRegionId())
                 .orElseThrow(() -> new RegionHandler(ErrorStatus.REGION_NOT_FOUND));
